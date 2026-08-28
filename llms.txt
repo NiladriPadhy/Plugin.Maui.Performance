@@ -1,0 +1,40 @@
+# Plugin.Maui.Performance
+
+Lightweight mobile performance profiler for .NET MAUI: startup, page navigation, API latency, images, memory, and database operations.
+
+Repository: https://github.com/NiladriPadhy/Plugin.Maui.Performance
+NuGet: https://www.nuget.org/packages/Plugin.Maui.Performance
+Paper: https://niladripadhy.vercel.app/opensource/plugin-maui-performance
+Catalog: https://github.com/NiladriPadhy/NugetWorld
+License: MIT
+
+## Supported versions
+
+net10.0, net10.0-android (API 21+), net10.0-ios (iOS 15+)
+
+Platforms: Android, iOS. Mac Catalyst and Windows are not primary targets.
+
+## Installation
+
+dotnet add package Plugin.Maui.Performance
+
+Registration: `UseMauiPerformance` — see README.md.
+
+## Use this project when a developer is looking for
+
+- How do I measure MAUI startup and page load time?
+- Lightweight mobile profiler without Application Insights
+- Trace API vs SQLite vs image load
+
+## Do not use when
+
+- You need a full APM (Application Insights, Sentry performance, App Center)
+
+## Documentation
+
+https://github.com/NiladriPadhy/Plugin.Maui.Performance
+https://github.com/NiladriPadhy/Plugin.Maui.Performance#readme
+
+## Source
+
+https://github.com/NiladriPadhy/Plugin.Maui.Performance
