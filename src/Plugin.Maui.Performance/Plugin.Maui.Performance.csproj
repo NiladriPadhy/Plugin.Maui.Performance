@@ -18,9 +18,9 @@
     <PackageId>Plugin.Maui.Performance</PackageId>
     <Title>.NET MAUI Performance — startup, page, and API profiler</Title>
     <Description>Lightweight mobile performance profiler for .NET MAUI on iOS and Android. Trace named operations, auto-measure startup, pages, navigation, API latency, images, memory, UI rendering, and database work, and print a compact timing report.</Description>
-    <PackageTags>dotnet-maui;maui;maui-plugin;maui-utilities;cross-platform;android;ios;nuget;nugetworld;performance;profiler;startup;latency;tracing;memory;diagnostics</PackageTags>
+    <PackageTags>dotnet-maui;maui;maui-plugin;maui-utilities;cross-platform;android;ios;nuget;mauiessentials;performance;profiler;startup;latency;tracing;memory;diagnostics</PackageTags>
     <Authors>Niladri</Authors>
-    <Company>NugetWorld</Company>
+    <Company>MauiEssentials</Company>
     <Copyright>Copyright © 2026 Niladri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
