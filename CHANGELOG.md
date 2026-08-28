@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Add the NuGet package link and badge to the README
+
 ## 1.0.0
 
 - Lightweight performance profiler for .NET MAUI on iOS and Android

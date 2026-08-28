@@ -1,5 +1,7 @@
 # Plugin.Maui.Performance
 
+[![NuGet](https://img.shields.io/nuget/v/Plugin.Maui.Performance.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Maui.Performance)
+
 A lightweight mobile performance profiler for **.NET MAUI** on **iOS** and **Android**.
 
 ```csharp
@@ -29,6 +31,8 @@ Image Loading     210 ms
 ```
 
 ## Install
+
+Package: [https://www.nuget.org/packages/Plugin.Maui.Performance](https://www.nuget.org/packages/Plugin.Maui.Performance)
 
 ```bash
 dotnet add package Plugin.Maui.Performance
