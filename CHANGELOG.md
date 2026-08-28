@@ -1,0 +1,11 @@
+# Changelog
+
+## 1.0.0
+
+- Lightweight performance profiler for .NET MAUI on iOS and Android
+- `MauiPerformance.Trace("LoadCustomer")` named timings
+- Automatic startup, page, navigation, image, and first-frame measurement
+- `PerformanceDelegatingHandler` for API latency
+- `TraceDatabase` / `Measure` helpers for SQLite and other local work
+- Memory snapshots (working set, free RAM, pressure) on traces and the report
+- Compact report: `App Startup 1.82 sec`, `Home Page 420 ms`, …

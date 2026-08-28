@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Plugin.Maui.Performance.Sample.CustomerPage"
+             Title="Customer">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
+            <Label Text="Customer" FontSize="22" FontAttributes="Bold" />
+            <Label Text="Page, navigation, image, and render timings are recorded automatically."
+                   TextColor="Gray" />
+
+            <Image x:Name="Avatar"
+                   HeightRequest="96"
+                   WidthRequest="96"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Start" />
+
+            <Label x:Name="NameLabel" FontSize="18" />
+            <Label x:Name="DetailLabel" TextColor="Gray" />
+
+            <Button Text="Back" Clicked="OnBackClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,212 @@
+# Plugin.Maui.Performance
+
+A lightweight mobile performance profiler for **.NET MAUI** on **iOS** and **Android**.
+
+```csharp
+using var trace =
+    MauiPerformance.Trace("LoadCustomer");
+```
+
+Automatically measure:
+
+- Page startup
+- Navigation time
+- API latency
+- Image loading
+- Memory
+- UI rendering
+- Database operations
+- Startup time
+
+And produce:
+
+```
+App Startup       1.82 sec
+Home Page         420 ms
+Customer API      630 ms
+SQLite Query       18 ms
+Image Loading     210 ms
+```
+
+## Install
+
+```bash
+dotnet add package Plugin.Maui.Performance
+```
+
+Target frameworks: `net10.0`, `net10.0-android`, `net10.0-ios`.
+
+## Quick start
+
+```csharp
+using Plugin.Maui.Performance;
+
+public static class MauiProgram
+{
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .UseMauiPerformance();
+
+        return builder.Build();
+    }
+}
+```
+
+```csharp
+using var trace = MauiPerformance.Trace("LoadCustomer");
+
+await MauiPerformance.MeasureAsync("Customer API", () => client.GetStringAsync("/customer"), PerformanceCategory.Api);
+
+MauiPerformance.Measure("SQLite Query", () => db.Query("SELECT * FROM customer"), PerformanceCategory.Database);
+
+Console.WriteLine(MauiPerformance.FormatReport());
+```
+
+Resolve `IMauiPerformance` from dependency injection, or use `MauiPerformance.Current`.
+
+## Named traces
+
+```csharp
+using var load = MauiPerformance.Trace("LoadCustomer");
+
+using var api = MauiPerformance.TraceApi("Customer API");
+using var query = MauiPerformance.TraceDatabase("SQLite Query");
+using var image = MauiPerformance.TraceImage("Image Loading");
+```
+
+Dispose ends the timing and stores the metric. `Cancel()` ends it without recording.
+
+Already have a duration?
+
+```csharp
+MauiPerformance.Record("Home Page", TimeSpan.FromMilliseconds(420), PerformanceCategory.Page);
+```
+
+## Automatic measurement
+
+`UseMauiPerformance()` turns these on by default:
+
+| Signal | How |
+| --- | --- |
+| **Startup time** | Process start (or `Start`) to the first content page. Recorded as `App Startup`. |
+| **Page startup** | Page appearing until `Loaded`. Named from the page title (`Home` → `Home Page`). |
+| **Navigation time** | Previous page disappearing until the next appearing (`Home Page → Customer Page`). |
+| **API latency** | `PerformanceDelegatingHandler` on `HttpClient`. Path `/customer` becomes `Customer API`. |
+| **Image loading** | Images on each page, aggregated as `Image Loading`. |
+| **UI rendering** | Next display frame after the page loads (`UI Render`). Android `Choreographer`, iOS `CADisplayLink`. |
+| **Memory** | Working set / managed heap plus free RAM on Android (`ActivityManager`) and iOS (`os_proc_available_memory`). Attached to traces and printed on the report. |
+| **Database** | Not hooked globally — wrap SQLite (or any store) with `TraceDatabase` / `Measure`. |
+
+```csharp
+builder.UseMauiPerformance(options =>
+{
+    options.AutoMeasureStartup = true;
+    options.AutoMeasurePages = true;
+    options.AutoMeasureNavigation = true;
+    options.AutoMeasureImages = true;
+    options.AutoMeasureRendering = true;
+    options.SampleMemory = true;
+    options.Enabled = true;
+});
+```
+
+Set `Enabled` to `false` in production if you only want timings in debug builds.
+
+## Automatic API tracking
+
+```csharp
+builder.Services.AddHttpClient("shop", client =>
+{
+    client.BaseAddress = new Uri("https://api.shop");
+}).AddHttpMessageHandler(() => new PerformanceDelegatingHandler());
+```
+
+Override the metric name:
+
+```csharp
+var request = new HttpRequestMessage(HttpMethod.Get, "/customer");
+request.Options.Set(PerformanceHttp.NameKey, "Customer API");
+```
+
+Query strings are stripped from stored URLs.
+
+## The report
+
+```csharp
+var report = MauiPerformance.GetReport();
+Console.WriteLine(report.Format());
+
+report.Metrics;      // latest timing per name
+report.AllMetrics;   // full ring buffer
+report.Memory.WorkingSetBytes;
+report.Memory.AvailableBytes;
+report.Memory.Pressure;
+```
+
+Durations of one second or more print as `1.82 sec`. Shorter work prints as `420 ms`.
+
+## Without the generic host
+
+```csharp
+var performance = MauiPerformance.Create(new MauiPerformanceOptions
+{
+    AutoMeasureStartup = true
+});
+
+performance.Start();
+```
+
+## Platform notes
+
+**Android** — memory from `ActivityManager`; first frame via `Choreographer`. Declare network access if you use the HTTP handler:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+
+**iOS** — memory from `os_proc_available_memory` and `NSProcessInfo.PhysicalMemory`; first frame via `CADisplayLink`. No extra `Info.plist` keys.
+
+| | Android | iOS | `net10.0` |
+| --- | --- | --- | --- |
+| Named traces / report | Yes | Yes | Yes (tests) |
+| Startup / page / navigation | Yes | Yes | Listener APIs |
+| HTTP handler | Yes | Yes | Yes |
+| Image aggregation | Yes | Yes | — |
+| Next-frame render | Choreographer | CADisplayLink | Immediate |
+| Memory probes | ActivityManager | os_proc_available_memory | GC + working set |
+
+## Sample
+
+`samples/Plugin.Maui.Performance.Sample` loads a customer (API + SQLite + image), navigates to a customer page, and prints the live report.
+
+```bash
+dotnet build src/Plugin.Maui.Performance/Plugin.Maui.Performance.csproj
+dotnet pack src/Plugin.Maui.Performance/Plugin.Maui.Performance.csproj -c Release -o artifacts
+dotnet test tests/Plugin.Maui.Performance.Tests/Plugin.Maui.Performance.Tests.csproj
+dotnet build samples/Plugin.Maui.Performance.Sample/Plugin.Maui.Performance.Sample.csproj -f net10.0-android
+```
+
+## Pack from source
+
+```bash
+dotnet pack src/Plugin.Maui.Performance/Plugin.Maui.Performance.csproj -c Release -o artifacts
+```
+
+The `.nupkg` is written to `artifacts/Plugin.Maui.Performance.1.0.0.nupkg`.
+
+## License
+
+MIT
+
+## Support
+
+> If this plugin saved you a weekend of native plumbing, consider buying me a coffee.
+> Your support keeps it maintained, documented, and free.
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/npadhy)
+
+This library stays open source. A coffee helps cover time for bug fixes, new features, and docs.

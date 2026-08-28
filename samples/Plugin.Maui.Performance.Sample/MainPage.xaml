@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Plugin.Maui.Performance.Sample.MainPage"
+             Title="Home">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="10">
+            <Label Text="Plugin.Maui.Performance" FontSize="22" FontAttributes="Bold" />
+            <Label Text="A lightweight mobile performance profiler."
+                   TextColor="Gray" />
+
+            <Button Text="Load customer" Clicked="OnLoadCustomerClicked" />
+            <Button Text="Open customer page" Clicked="OnCustomerPageClicked" />
+            <Button Text="Show example timings" Clicked="OnExampleClicked" />
+            <Button Text="Refresh report" Clicked="OnRefreshClicked" />
+            <Button Text="Clear metrics" Clicked="OnClearClicked" />
+
+            <Label Text="Report" FontAttributes="Bold" Margin="0,12,0,0" />
+            <Label x:Name="ReportLabel"
+                   FontFamily="Courier New"
+                   FontSize="14"
+                   LineBreakMode="WordWrap"
+                   Text="Tap Load customer." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
